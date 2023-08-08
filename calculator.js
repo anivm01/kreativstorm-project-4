@@ -51,6 +51,9 @@ const chooseOperation = (operator) => {
 
 
 const compute = (fullOperationArray) => {
+    if (input === "") {
+        return
+    }
     if (fullOperationArray.length < 3) {
         return
     }
