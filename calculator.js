@@ -3,7 +3,7 @@ const fullOperationElement = document.querySelector(".previous")
 const numbers = document.querySelectorAll(".number")
 const operators = document.querySelectorAll(".operator")
 const clearButton = document.querySelector(".clear")
-const toggleDecimal = document.querySelector(".toggle")
+const toggleSign = document.querySelector(".toggle")
 const percentage = document.querySelector(".percentage")
 const equalsButton = document.querySelector(".equals")
 
@@ -118,6 +118,14 @@ const evaluate = () => {
     }
 }
 
+const changeSign = () => {
+    if (input === "") {
+        return
+    }
+    input = input * (-1)
+    return
+}
+
 numbers.forEach((number) => {
     number.addEventListener("click", () => {
         appendNumber(number.innerText)
@@ -139,5 +147,10 @@ equalsButton.addEventListener("click", () => {
 
 clearButton.addEventListener("click", () => {
     clear()
+    updateDisplay(input, fullOperation)
+})
+
+toggleSign.addEventListener("click", () => {
+    changeSign()
     updateDisplay(input, fullOperation)
 })
