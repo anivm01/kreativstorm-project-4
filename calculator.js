@@ -7,7 +7,6 @@ const toggleDecimal = document.querySelector(".toggle")
 const percentage = document.querySelector(".percentage")
 const equalsButton = document.querySelector(".equals")
 
-
 let input = ""
 let fullOperation = []
 
@@ -49,7 +48,6 @@ const chooseOperation = (operator) => {
     input = ""
 }
 
-
 const compute = (fullOperationArray) => {
     if (input === "") {
         return
@@ -68,6 +66,10 @@ const compute = (fullOperationArray) => {
     for (let i = 0; i < fullOperationArray.length; i++) {
         if (fullOperationArray.includes("÷")) {
             const divideIndex = fullOperationArray.indexOf("÷")
+            if (fullOperationArray[divideIndex + 1] === 0) {
+                fullOperationArray = []
+                break
+            }
             const result = fullOperationArray[divideIndex - 1] / fullOperationArray[divideIndex + 1]
             fullOperationArray.splice((divideIndex - 1), 3, result)
         }
@@ -96,7 +98,14 @@ const compute = (fullOperationArray) => {
 const evaluate = () => {
     addInputToOperation()
     const fullOperationCopy = [...fullOperation]
-    result = compute(fullOperation)
+    let result = compute(fullOperation)
+    if (result === undefined) {
+        clear()
+        return {
+            result: "Error",
+            computation: []
+        }
+    }
     const computationArray = [...fullOperationCopy, "=", result]
     input = result
     fullOperation = []
