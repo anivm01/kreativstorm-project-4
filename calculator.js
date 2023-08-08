@@ -43,6 +43,9 @@ const addInputToOperation = () => {
 }
 
 const chooseOperation = (operator) => {
+    if (input === "" && (fullOperation[fullOperation.length - 1] === "+" || fullOperation[fullOperation.length - 1] === "-" || fullOperation[fullOperation.length - 1] === "x" || fullOperation[fullOperation.length - 1] === "÷")) {
+        return
+    }
     addInputToOperation()
     fullOperation.push(operator)
     input = ""
