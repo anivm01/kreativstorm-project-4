@@ -26,6 +26,10 @@ const appendNumber = (number) => {
     if (number === '.' && input.includes('.')) {
         return
     }
+    if (input === "0" && number !== ".") {
+        input = number.toString()
+        return
+    }
     input = input.toString() + number.toString()
 }
 
@@ -34,7 +38,7 @@ const addInputToOperation = () => {
         return
     }
     const newInput = parseFloat(input)
-    if (newInput === NaN) {
+    if (isNaN(newInput)) {
         return
     }
     fullOperation.push(newInput)
@@ -117,7 +121,7 @@ const changeSign = () => {
     if (input === "") {
         return
     }
-    input = input * (-1)
+    input = (parseFloat(input * (-1))).toString()
     return
 }
 
@@ -125,7 +129,7 @@ const calculatePercentage = () => {
     if (input === "") {
         return
     }
-    input = input / (100)
+    input = (parseFloat(input / (100))).toString()
     return
 }
 
