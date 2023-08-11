@@ -129,6 +129,9 @@ const calculatePercentage = () => {
     if (input === "") {
         return
     }
+    if (input.includes(".")) {
+        return
+    }
     input = (parseFloat(input / (100))).toString()
     return
 }
