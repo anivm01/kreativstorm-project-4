@@ -19,7 +19,6 @@ const clear = () => {
 const updateDisplay = (top, bottom) => {
     inputElement.innerText = top
     fullOperationElement.innerText = bottom.join(" ")
-    console.log(fullOperation)
     return
 }
 
@@ -64,7 +63,6 @@ const compute = (fullOperationArray) => {
             const result = fullOperationArray[mulitplyIndex - 1] * fullOperationArray[mulitplyIndex + 1]
             fullOperationArray.splice((mulitplyIndex - 1), 3, result)
         }
-        console.log(fullOperationArray)
     }
     for (let i = 0; i < fullOperationArray.length; i++) {
         if (fullOperationArray.includes("÷")) {
@@ -76,7 +74,6 @@ const compute = (fullOperationArray) => {
             const result = fullOperationArray[divideIndex - 1] / fullOperationArray[divideIndex + 1]
             fullOperationArray.splice((divideIndex - 1), 3, result)
         }
-        console.log(fullOperationArray)
     }
     for (let i = 0; i < fullOperationArray.length; i++) {
         if (fullOperationArray.includes("+")) {
@@ -84,7 +81,6 @@ const compute = (fullOperationArray) => {
             const result = fullOperationArray[addIndex - 1] + fullOperationArray[addIndex + 1]
             fullOperationArray.splice((addIndex - 1), 3, result)
         }
-        console.log(fullOperationArray)
     }
     for (let i = 0; i < fullOperationArray.length; i++) {
         if (fullOperationArray.includes("-")) {
@@ -92,7 +88,6 @@ const compute = (fullOperationArray) => {
             const result = fullOperationArray[minusIndex - 1] - fullOperationArray[minusIndex + 1]
             fullOperationArray.splice((minusIndex - 1), 3, result)
         }
-        console.log(fullOperationArray)
     }
 
     return fullOperationArray[0]
@@ -126,6 +121,14 @@ const changeSign = () => {
     return
 }
 
+const calculatePercentage = () => {
+    if (input === "") {
+        return
+    }
+    input = input / (100)
+    return
+}
+
 numbers.forEach((number) => {
     number.addEventListener("click", () => {
         appendNumber(number.innerText)
@@ -154,3 +157,9 @@ toggleSign.addEventListener("click", () => {
     changeSign()
     updateDisplay(input, fullOperation)
 })
+
+percentage.addEventListener("click", () => {
+    calculatePercentage()
+    updateDisplay(input, fullOperation)
+})
+
