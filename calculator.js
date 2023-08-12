@@ -41,7 +41,6 @@ const updateDisplay = () => {
 }
 
 const appendNumber = (number) => {
-    console.log(fullOperation)
     if (fullOperation.prev && fullOperation.operation === "") {
         fullOperation.prev = ""
     }
@@ -52,26 +51,27 @@ const appendNumber = (number) => {
     if (number === '.' && input.includes('.')) {
         return
     }
+    if (number === '.' && input === "") {
+        number = "0."
+    }
     if (input === "0" && number !== ".") {
         input = number
-        fullOperation.current = parseFloat(input)
+        fullOperation.current = input
         return
     }
-    if (number === ".") {
-        number = ".2"
-    }
-    console.log(input + number)
     input = input + number
-    fullOperation.current = parseFloat(input)
+    fullOperation.current = input
     return
 }
 
 const chooseOperation = (operator) => {
-    console.log(fullOperation)
-    if (fullOperation.current === "" && fullOperation.prev === "" & fullOperation.operation === "") {
+    if (fullOperation.current === "" && fullOperation.prev === "" && fullOperation.operation === "") {
         return
     } else if (fullOperation.prev && fullOperation.operation === "" && fullOperation.current === "") {
         fullOperation.operation = operator
+    } else if (fullOperation.prev && fullOperation.operation && fullOperation.current === "") {
+        fullOperation.operation = operator
+        return
     }
     else if (fullOperation.operation !== "" && fullOperation.prev !== "" && fullOperation.current !== "") {
         result = compute()
@@ -89,13 +89,14 @@ const chooseOperation = (operator) => {
 }
 
 const compute = () => {
-    console.log(fullOperation)
     if (fullOperation.prev === "" || fullOperation.current === "" || fullOperation.operation === "") {
         return
     }
     if (isNaN(fullOperation.prev) || isNaN(fullOperation.current)) {
         return
     }
+    fullOperation.current = parseFloat(fullOperation.current)
+    fullOperation.prev = parseFloat(fullOperation.prev)
 
     let computation = ""
 
@@ -135,7 +136,6 @@ const evaluate = () => {
     fullOperation.prev = result
     fullOperation.operation = ""
     fullOperation.current = ""
-    console.log(fullOperation)
     return
 }
 
