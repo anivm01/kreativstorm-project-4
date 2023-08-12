@@ -26,9 +26,26 @@ const clear = () => {
     return
 }
 
+const backspace = () => {
+    let input = fullOperation.current.toString()
+    if (input === "") {
+        return
+    }
+    input = input.slice(0, -1)
+    if (input.length === 0) {
+        fullOperation.current = ""
+        return
+    }
+    console.log(input)
+    fullOperation.current = parseFloat(input)
+    console.log(fullOperation.current)
+
+    return
+}
+
 const updateDisplay = () => {
-    inputElement.innerText = fullOperation.current
-    fullOperationElement.innerText = fullOperation.prev + (fullOperation.operation !== "" ? " " + fullOperation.operation : "")
+    inputElement.innerText = fullOperation.current.toString()
+    fullOperationElement.innerText = fullOperation.prev.toString() + (fullOperation.operation.toString() !== "" ? " " + fullOperation.operation.toString() : "")
     return
 }
 
@@ -68,14 +85,17 @@ const chooseOperation = (operator) => {
     // if (input === "" && (fullOperation[fullOperation.length - 1] === "+" || fullOperation[fullOperation.length - 1] === "-" || fullOperation[fullOperation.length - 1] === "x" || fullOperation[fullOperation.length - 1] === "÷")) {
     //     return
     // }
-    if (fullOperation.operation !== "" && fullOperation.prev !== "" && fullOperation.current !== "") {
+    if (fullOperation.prev === "") {
+        return
+    }
+    else if (fullOperation.operation !== "" && fullOperation.prev !== "" && fullOperation.current !== "") {
         result = compute()
         fullOperation.prev = result
         fullOperation.operation = operator
         fullOperation.current = ""
         console.log(fullOperation)
     }
-    else if (!fullOperation.current && !fullOperation.operation && fullOperation.prev) {
+    else if (fullOperation.current === "" && fullOperation.operation === "" && fullOperation.prev) {
         fullOperation.prev = fullOperation.prev
         fullOperation.operation = operator
     } else {
@@ -153,7 +173,10 @@ const chooseOperation = (operator) => {
 // }
 
 const compute = () => {
-    if (!fullOperation.prev || !fullOperation.current || !fullOperation.operation) {
+    if (fullOperation.prev === "" || fullOperation.current === "" || fullOperation.operation === "") {
+        return
+    }
+    if (isNaN(fullOperation.prev) || isNaN(fullOperation.current)) {
         return
     }
 
@@ -182,9 +205,7 @@ const compute = () => {
 
 
 const evaluate = () => {
-    if (!fullOperation.operation || !fullOperation.prev || !fullOperation.current) {
-        return
-    }
+
     if (fullOperation.current === 0 && fullOperation.operation === "÷") {
         clear()
         inputElement.innerText = "Error"
@@ -251,3 +272,53 @@ percentage.addEventListener("click", () => {
     updateDisplay()
 })
 
+document.addEventListener('keydown', (event) => {
+    const key = event.key;
+    const isShiftPressed = event.shiftKey;
+
+    //single digit number keys
+    if (/^\d$/.test(key)) {
+        console.log(key);
+        appendNumber(key)
+        updateDisplay()
+    }
+
+    //operators + - * /
+    if (/[+\-\*/]/.test(key)) {
+        console.log(key);
+        if (key === "*") {
+            chooseOperation("x")
+            updateDisplay()
+        } else if (key === "/") {
+            chooseOperation("÷")
+            updateDisplay()
+        } else {
+            chooseOperation(key)
+            updateDisplay()
+        }
+    }
+
+    if (key === 'Enter') {
+        evaluate()
+        updateDisplay()
+    }
+
+    if (key === 'Escape') {
+        clear()
+        updateDisplay()
+    }
+
+    if (key === 'Backspace') {
+        backspace()
+        updateDisplay()
+    }
+
+    if (key === '%') {
+        calculatePercentage()
+        updateDisplay()
+    }
+    if (isShiftPressed && key === '-') {
+        changeSign()
+        updateDisplay()
+    }
+});
