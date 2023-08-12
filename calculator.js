@@ -17,6 +17,8 @@ const clear = () => {
     fullOperation.prev = ""
     fullOperation.current = ""
     fullOperation.operation = ""
+    inputElement.innerText = ""
+    fullOperationElement.innerText = ""
     return
 }
 
@@ -128,9 +130,10 @@ const evaluate = () => {
     if (fullOperation.current === "" || fullOperation.prev === "" || fullOperation.operation === "") {
         return
     }
-    if (fullOperation.current === 0 && fullOperation.operation === "÷") {
+    if (fullOperation.current === "0" && fullOperation.operation === "÷") {
         clear()
-        inputElement.innerText = "Error"
+        inputElement.innerText = "🤯"
+        return
     }
     result = compute()
     fullOperation.prev = result
@@ -174,6 +177,9 @@ operators.forEach((operator) => {
 
 equalsButton.addEventListener("click", () => {
     evaluate()
+    if (inputElement.innerText === "🤯") {
+        return
+    }
     updateDisplay()
 })
 
@@ -194,10 +200,13 @@ percentage.addEventListener("click", () => {
 
 document.addEventListener('keydown', (event) => {
     const key = event.key;
-    const isShiftPressed = event.shiftKey;
 
     //single digit number keys
     if (/^\d$/.test(key)) {
+        appendNumber(key)
+        updateDisplay()
+    }
+    if (key === ".") {
         appendNumber(key)
         updateDisplay()
     }
@@ -235,7 +244,7 @@ document.addEventListener('keydown', (event) => {
         calculatePercentage()
         updateDisplay()
     }
-    if (isShiftPressed && key === '-') {
+    if (key === 'Shift') {
         changeSign()
         updateDisplay()
     }
