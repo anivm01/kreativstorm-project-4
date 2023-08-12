@@ -41,22 +41,37 @@ const updateDisplay = () => {
 }
 
 const appendNumber = (number) => {
-    let input = fullOperation.current
-    if (number === '.' && input.toString().includes('.')) {
+    console.log(fullOperation)
+    if (fullOperation.prev && fullOperation.operation === "") {
+        fullOperation.prev = ""
+    }
+    let input = fullOperation.current.toString()
+    if (input.length > 9) {
         return
     }
-    if (input.toString() === "0" && number !== ".") {
+    if (number === '.' && input.includes('.')) {
+        return
+    }
+    if (input === "0" && number !== ".") {
         input = number
+        fullOperation.current = parseFloat(input)
         return
     }
-    input = input.toString() + number.toString()
+    if (number === ".") {
+        number = ".2"
+    }
+    console.log(input + number)
+    input = input + number
     fullOperation.current = parseFloat(input)
     return
 }
 
 const chooseOperation = (operator) => {
-    if (fullOperation.prev === "") {
+    console.log(fullOperation)
+    if (fullOperation.current === "" && fullOperation.prev === "" & fullOperation.operation === "") {
         return
+    } else if (fullOperation.prev && fullOperation.operation === "" && fullOperation.current === "") {
+        fullOperation.operation = operator
     }
     else if (fullOperation.operation !== "" && fullOperation.prev !== "" && fullOperation.current !== "") {
         result = compute()
@@ -64,10 +79,7 @@ const chooseOperation = (operator) => {
         fullOperation.operation = operator
         fullOperation.current = ""
     }
-    else if (fullOperation.current === "" && fullOperation.operation === "" && fullOperation.prev) {
-        fullOperation.prev = fullOperation.prev
-        fullOperation.operation = operator
-    } else {
+    else {
         fullOperation.prev = fullOperation.current
         fullOperation.operation = operator
         fullOperation.current = ""
@@ -77,6 +89,7 @@ const chooseOperation = (operator) => {
 }
 
 const compute = () => {
+    console.log(fullOperation)
     if (fullOperation.prev === "" || fullOperation.current === "" || fullOperation.operation === "") {
         return
     }
@@ -103,10 +116,17 @@ const compute = () => {
             return
     }
 
+    // if (computation.toString().length > 9 && computation.toString().includes(".")) {
+    // }
+    computation = Math.round((computation + Number.EPSILON) * 100) / 100
+
     return computation
 }
 
 const evaluate = () => {
+    if (fullOperation.current === "" || fullOperation.prev === "" || fullOperation.operation === "") {
+        return
+    }
     if (fullOperation.current === 0 && fullOperation.operation === "÷") {
         clear()
         inputElement.innerText = "Error"
@@ -115,6 +135,7 @@ const evaluate = () => {
     fullOperation.prev = result
     fullOperation.operation = ""
     fullOperation.current = ""
+    console.log(fullOperation)
     return
 }
 

@@ -28,6 +28,12 @@ body {
     background-color: rgb(29, 28, 27);
     color: white;
     margin: 0;
+    overflow: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.current::-webkit-scrollbar {
+    display: none;
 }
 
 .previous {
@@ -38,6 +44,12 @@ body {
     text-align: end;
     padding: 0 1rem;
     margin: 0;
+    overflow: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.previous::-webkit-scrollbar {
+    display: none;
 }
 
 .grid {
