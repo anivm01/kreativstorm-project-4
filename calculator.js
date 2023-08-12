@@ -10,15 +10,19 @@ const equalsButton = document.querySelector(".equals")
 let input = ""
 let fullOperation = []
 
+let firstOperand = ""
+let secondOperand = ""
+let operation = ""
+
 const clear = () => {
     input = ""
     fullOperation = []
     return
 }
 
-const updateDisplay = (top, bottom) => {
+const updateDisplay = (top) => {
     inputElement.innerText = top
-    fullOperationElement.innerText = bottom.join(" ")
+    fullOperationElement.innerText = `${firstOperand} ${operation} ${secondOperand}`
     return
 }
 
@@ -41,61 +45,126 @@ const addInputToOperation = () => {
     if (isNaN(newInput)) {
         return
     }
-    fullOperation.push(newInput)
+    // fullOperation.push(newInput)
+    firstOperand = newInput
     return
 }
 
 const chooseOperation = (operator) => {
-    if (input === "" && (fullOperation[fullOperation.length - 1] === "+" || fullOperation[fullOperation.length - 1] === "-" || fullOperation[fullOperation.length - 1] === "x" || fullOperation[fullOperation.length - 1] === "÷")) {
-        return
+    // if (input === "" && (fullOperation[fullOperation.length - 1] === "+" || fullOperation[fullOperation.length - 1] === "-" || fullOperation[fullOperation.length - 1] === "x" || fullOperation[fullOperation.length - 1] === "÷")) {
+    //     return
+    // }
+    console.log(firstOperand)
+    console.log(secondOperand)
+    console.log(operation)
+    if (operation !== "" && firstOperand !== "" && input !== "") {
+        result = compute()
+        firstOperand = result
+        operation = operator
+        console.log(firstOperand)
+        console.log(secondOperand)
+        console.log(operation)
     }
-    addInputToOperation()
-    fullOperation.push(operator)
+    // addInputToOperation()
+    // fullOperation.push(operator)
+    operation = operator
     input = ""
 }
 
-const compute = (fullOperationArray) => {
-    if (input === "") {
+// const compute = (fullOperationArray) => {
+//     if (input === "") {
+//         return
+//     }
+//     if (fullOperationArray.length < 3) {
+//         return
+//     }
+
+//     switch (operation) {
+//         case '+':
+//             computation = prev + current
+//             break
+//         case '-':
+//             computation = prev - current
+//             break
+//         case 'x':
+//             computation = prev * current
+//             break
+//         case '÷':
+//             computation = prev / current
+//             break
+//         default:
+//             return
+//     }
+
+
+
+
+//     for (let i = 0; i < fullOperationArray.length; i++) {
+//         if (fullOperationArray.includes("x")) {
+//             const mulitplyIndex = fullOperationArray.indexOf("x")
+//             const result = fullOperationArray[mulitplyIndex - 1] * fullOperationArray[mulitplyIndex + 1]
+//             fullOperationArray.splice((mulitplyIndex - 1), 3, result)
+//         }
+//     }
+//     for (let i = 0; i < fullOperationArray.length; i++) {
+//         if (fullOperationArray.includes("÷")) {
+//             const divideIndex = fullOperationArray.indexOf("÷")
+//             if (fullOperationArray[divideIndex + 1] === 0) {
+//                 fullOperationArray = []
+//                 break
+//             }
+//             const result = fullOperationArray[divideIndex - 1] / fullOperationArray[divideIndex + 1]
+//             fullOperationArray.splice((divideIndex - 1), 3, result)
+//         }
+//     }
+//     for (let i = 0; i < fullOperationArray.length; i++) {
+//         if (fullOperationArray.includes("+")) {
+//             const addIndex = fullOperationArray.indexOf("+")
+//             const result = fullOperationArray[addIndex - 1] + fullOperationArray[addIndex + 1]
+//             fullOperationArray.splice((addIndex - 1), 3, result)
+//         }
+//     }
+//     for (let i = 0; i < fullOperationArray.length; i++) {
+//         if (fullOperationArray.includes("-")) {
+//             const minusIndex = fullOperationArray.indexOf("-")
+//             const result = fullOperationArray[minusIndex - 1] - fullOperationArray[minusIndex + 1]
+//             fullOperationArray.splice((minusIndex - 1), 3, result)
+//         }
+//     }
+
+//     return fullOperationArray[0]
+// }
+
+const compute = () => {
+    if (firstOperand === "") {
         return
     }
-    if (fullOperationArray.length < 3) {
-        return
-    }
-    for (let i = 0; i < fullOperationArray.length; i++) {
-        if (fullOperationArray.includes("x")) {
-            const mulitplyIndex = fullOperationArray.indexOf("x")
-            const result = fullOperationArray[mulitplyIndex - 1] * fullOperationArray[mulitplyIndex + 1]
-            fullOperationArray.splice((mulitplyIndex - 1), 3, result)
-        }
-    }
-    for (let i = 0; i < fullOperationArray.length; i++) {
-        if (fullOperationArray.includes("÷")) {
-            const divideIndex = fullOperationArray.indexOf("÷")
-            if (fullOperationArray[divideIndex + 1] === 0) {
-                fullOperationArray = []
-                break
-            }
-            const result = fullOperationArray[divideIndex - 1] / fullOperationArray[divideIndex + 1]
-            fullOperationArray.splice((divideIndex - 1), 3, result)
-        }
-    }
-    for (let i = 0; i < fullOperationArray.length; i++) {
-        if (fullOperationArray.includes("+")) {
-            const addIndex = fullOperationArray.indexOf("+")
-            const result = fullOperationArray[addIndex - 1] + fullOperationArray[addIndex + 1]
-            fullOperationArray.splice((addIndex - 1), 3, result)
-        }
-    }
-    for (let i = 0; i < fullOperationArray.length; i++) {
-        if (fullOperationArray.includes("-")) {
-            const minusIndex = fullOperationArray.indexOf("-")
-            const result = fullOperationArray[minusIndex - 1] - fullOperationArray[minusIndex + 1]
-            fullOperationArray.splice((minusIndex - 1), 3, result)
-        }
+    secondOperand = parseFloat(input)
+
+    let computation = ""
+
+
+    switch (operation) {
+        case '+':
+            computation = firstOperand + secondOperand
+            break
+        case '-':
+            computation = firstOperand - secondOperand
+            break
+        case 'x':
+            computation = firstOperand * secondOperand
+            break
+        case '÷':
+            computation = firstOperand / secondOperand
+            break
+        default:
+            return
     }
 
-    return fullOperationArray[0]
+    return computation
 }
+
+
 
 const evaluate = () => {
     addInputToOperation()
@@ -139,14 +208,14 @@ const calculatePercentage = () => {
 numbers.forEach((number) => {
     number.addEventListener("click", () => {
         appendNumber(number.innerText)
-        updateDisplay(input, fullOperation)
+        updateDisplay(input)
     })
 })
 
 operators.forEach((operator) => {
     operator.addEventListener("click", () => {
         chooseOperation(operator.innerText)
-        updateDisplay(input, fullOperation)
+        updateDisplay(input)
     })
 })
 
