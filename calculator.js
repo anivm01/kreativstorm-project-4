@@ -7,68 +7,85 @@ const toggleSign = document.querySelector(".toggle")
 const percentage = document.querySelector(".percentage")
 const equalsButton = document.querySelector(".equals")
 
-let input = ""
-let fullOperation = []
+// let input = ""
+const fullOperation = {
+    prev: "",
+    current: "",
+    operation: ""
+}
 
 let firstOperand = ""
 let secondOperand = ""
 let operation = ""
 
 const clear = () => {
-    input = ""
-    fullOperation = []
+    // input = ""
+    fullOperation.prev = ""
+    fullOperation.current = ""
+    fullOperation.operation = ""
     return
 }
 
-const updateDisplay = (top) => {
-    inputElement.innerText = top
-    fullOperationElement.innerText = `${firstOperand} ${operation} ${secondOperand}`
+const updateDisplay = () => {
+    inputElement.innerText = fullOperation.current
+    fullOperationElement.innerText = fullOperation.prev + (fullOperation.operation !== "" ? " " + fullOperation.operation : "")
     return
 }
 
 const appendNumber = (number) => {
-    if (number === '.' && input.includes('.')) {
+    let input = fullOperation.current
+    if (number === '.' && input.toString().includes('.')) {
         return
     }
-    if (input === "0" && number !== ".") {
-        input = number.toString()
+    if (input.toString() === "0" && number !== ".") {
+        input = number
         return
     }
     input = input.toString() + number.toString()
-}
+    fullOperation.current = parseFloat(input)
 
-const addInputToOperation = () => {
-    if (input === "") {
-        return
-    }
-    const newInput = parseFloat(input)
-    if (isNaN(newInput)) {
-        return
-    }
-    // fullOperation.push(newInput)
-    firstOperand = newInput
+    console.log(fullOperation)
     return
 }
+
+// const addInputToOperation = () => {
+//     if (input === "") {
+//         return
+//     }
+//     const newInput = parseFloat(input)
+//     if (isNaN(newInput)) {
+//         return
+//     }
+//     // fullOperation.push(newInput)
+//     firstOperand = newInput
+//     console.log(firstOperand)
+//     console.log(secondOperand)
+//     console.log(operation)
+//     return
+// }
 
 const chooseOperation = (operator) => {
     // if (input === "" && (fullOperation[fullOperation.length - 1] === "+" || fullOperation[fullOperation.length - 1] === "-" || fullOperation[fullOperation.length - 1] === "x" || fullOperation[fullOperation.length - 1] === "÷")) {
     //     return
     // }
-    console.log(firstOperand)
-    console.log(secondOperand)
-    console.log(operation)
-    if (operation !== "" && firstOperand !== "" && input !== "") {
+    if (fullOperation.operation !== "" && fullOperation.prev !== "" && fullOperation.current !== "") {
         result = compute()
-        firstOperand = result
-        operation = operator
-        console.log(firstOperand)
-        console.log(secondOperand)
-        console.log(operation)
+        fullOperation.prev = result
+        fullOperation.operation = operator
+        fullOperation.current = ""
+        console.log(fullOperation)
     }
-    // addInputToOperation()
-    // fullOperation.push(operator)
-    operation = operator
-    input = ""
+    else if (!fullOperation.current && !fullOperation.operation && fullOperation.prev) {
+        fullOperation.prev = fullOperation.prev
+        fullOperation.operation = operator
+    } else {
+        fullOperation.prev = fullOperation.current
+        fullOperation.operation = operator
+        fullOperation.current = ""
+        console.log(fullOperation)
+    }
+
+    return
 }
 
 // const compute = (fullOperationArray) => {
@@ -136,26 +153,24 @@ const chooseOperation = (operator) => {
 // }
 
 const compute = () => {
-    if (firstOperand === "") {
+    if (!fullOperation.prev || !fullOperation.current || !fullOperation.operation) {
         return
     }
-    secondOperand = parseFloat(input)
 
     let computation = ""
 
-
-    switch (operation) {
+    switch (fullOperation.operation) {
         case '+':
-            computation = firstOperand + secondOperand
+            computation = fullOperation.prev + fullOperation.current
             break
         case '-':
-            computation = firstOperand - secondOperand
+            computation = fullOperation.prev - fullOperation.current
             break
         case 'x':
-            computation = firstOperand * secondOperand
+            computation = fullOperation.prev * fullOperation.current
             break
         case '÷':
-            computation = firstOperand / secondOperand
+            computation = fullOperation.prev / fullOperation.current
             break
         default:
             return
@@ -167,75 +182,72 @@ const compute = () => {
 
 
 const evaluate = () => {
-    addInputToOperation()
-    const fullOperationCopy = [...fullOperation]
-    let result = compute(fullOperation)
-    if (result === undefined) {
+    if (!fullOperation.operation || !fullOperation.prev || !fullOperation.current) {
+        return
+    }
+    if (fullOperation.current === 0 && fullOperation.operation === "÷") {
         clear()
-        return {
-            result: "Error",
-            computation: []
-        }
+        inputElement.innerText = "Error"
     }
-    const computationArray = [...fullOperationCopy, "=", result]
-    input = result
-    fullOperation = []
-    return {
-        result: result,
-        computation: computationArray
-    }
+
+    result = compute()
+    fullOperation.prev = result
+    fullOperation.operation = ""
+    fullOperation.current = ""
+    console.log(fullOperation)
+    return
 }
 
 const changeSign = () => {
-    if (input === "") {
+    if (fullOperation.current === "") {
         return
     }
-    input = (parseFloat(input * (-1))).toString()
+    fullOperation.current = (parseFloat(fullOperation.current * (-1)))
     return
 }
 
 const calculatePercentage = () => {
-    if (input === "") {
+    if (fullOperation.current === "") {
         return
     }
-    if (input.includes(".")) {
+    if (fullOperation.current.toString().includes(".")) {
         return
     }
-    input = (parseFloat(input / (100))).toString()
+    fullOperation.current = fullOperation.current / 100
     return
 }
 
 numbers.forEach((number) => {
     number.addEventListener("click", () => {
         appendNumber(number.innerText)
-        updateDisplay(input)
+        updateDisplay()
     })
 })
 
 operators.forEach((operator) => {
     operator.addEventListener("click", () => {
         chooseOperation(operator.innerText)
-        updateDisplay(input)
+        updateDisplay()
     })
 })
 
 equalsButton.addEventListener("click", () => {
-    const final = evaluate()
-    updateDisplay(final.result, final.computation)
+    evaluate()
+    updateDisplay()
 })
 
 clearButton.addEventListener("click", () => {
     clear()
-    updateDisplay(input, fullOperation)
+    updateDisplay()
 })
 
 toggleSign.addEventListener("click", () => {
     changeSign()
-    updateDisplay(input, fullOperation)
+    updateDisplay()
 })
 
 percentage.addEventListener("click", () => {
     calculatePercentage()
-    updateDisplay(input, fullOperation)
+    updateDisplay()
 })
 
