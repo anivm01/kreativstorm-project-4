@@ -15,6 +15,7 @@ body {
     padding: 1rem;
     background-color: rgb(29, 28, 27);
     border-radius: 2rem;
+    overflow: hidden;
 }
 
 .current {
